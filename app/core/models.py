@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager,PermissionsMixin
-# Create your models here.
+from django.conf import settings
+
 
 class UserManager(BaseUserManager):
 
@@ -21,9 +22,10 @@ class UserManager(BaseUserManager):
 
         return user
 
-class User(AbstractBaseUser,PermissionsMixin):
 
-    email = models.EmailField(max_length=255,unique=True)
+class User(AbstractBaseUser, PermissionsMixin):
+
+    email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -32,5 +34,15 @@ class User(AbstractBaseUser,PermissionsMixin):
 
     USERNAME_FIELD = "email"
 
+
+class Tag(models.Model):
+    name = models.CharField(max_length=225)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return self.name
 
 
